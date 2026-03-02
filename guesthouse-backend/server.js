@@ -40,16 +40,25 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // ─── API Routes ───────────────────────────────────────────────────────────────
-app.use('/api/auth',     authRoutes);
-app.use('/api/rooms',    roomRoutes);
-app.use('/api/bookings', bookingRoutes);
-app.use('/api/reports',  reportRoutes);
-app.use('/api/users',    userRoutes);
+app.use('/api/auth',          authRoutes);
+app.use('/api/rooms',         roomRoutes);
+app.use('/api/bookings',      bookingRoutes);
+app.use('/api/reports',       reportRoutes);
+app.use('/api/users',         userRoutes);
 
 // ─── Health check ─────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString(), service: 'Glamorous GuestHouse API' });
 });
+
+// register upload routes *before* the 404 handler so they are reachable
+const uploadRoutes = require('./routes/upload');
+
+// Serve uploaded files statically
+app.use('/uploads', express.static('uploads'));
+
+// Register upload routes
+app.use('/api/upload', uploadRoutes);
 
 // ─── 404 handler ──────────────────────────────────────────────────────────────
 app.use((_req, res) => {
@@ -61,14 +70,6 @@ app.use((err, _req, res, _next) => {
   console.error('Unhandled error:', err);
   res.status(500).json({ error: 'Internal server error.' });
 });
-
-const uploadRoutes = require('./routes/upload');
-
-// Serve uploaded files statically
-app.use('/uploads', express.static('uploads'));
-
-// Register upload routes
-app.use('/api/upload', uploadRoutes);
 
 // ─── Start ────────────────────────────────────────────────────────────────────
 app.listen(PORT, () => {

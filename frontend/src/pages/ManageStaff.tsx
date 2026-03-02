@@ -15,10 +15,19 @@ export default function ManageStaff({ onToast }: { onToast: (m: string, t?: "suc
     setLoading(true);
     try {
       const params = roleFilter ? `?role=${roleFilter}` : "";
-      const data = await apiFetch(`/users${params}`);
-      setUsers(data.users || data || []);
-    } catch (error) {
-      onToast("Failed to load users.", "error");
+      const data: any = await apiFetch(`/users${params}`);
+
+      // data may be { users: [...] } or directly an array;
+      if (Array.isArray(data.users)) {
+        setUsers(data.users);
+      } else if (Array.isArray(data)) {
+        setUsers(data);
+      } else {
+        setUsers([]);
+      }
+    } catch (error: any) {
+      onToast(error?.message || "Failed to load users.", "error");
+      setUsers([]);
     } finally {
       setLoading(false);
     }

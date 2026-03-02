@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { apiFetch, formatPrice, roomImg } from "../utils";
+import { apiFetch, formatPrice, roomImg, API, authHeaders } from "../utils";
 import Spinner from "../components/Spinner";
 import "../styles/pages/adminrooms.css";
 
@@ -58,13 +58,20 @@ export default function AdminRooms({ onToast }: { onToast: (m: string, t?: "succ
     }
 
     try {
-      const response = await fetch('/api/upload', {
+      // prepare headers, remove json content-type if present
+      const headers = { ...authHeaders() } as Record<string,string>;
+      delete headers["Content-Type"];
+
+      const response = await fetch(`${API}/upload`, {
         method: 'POST',
         body: formData,
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('gg_token')}`
-        }
+        headers,
       });
+
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(errText || response.statusText);
+      }
 
       const data = await response.json();
       

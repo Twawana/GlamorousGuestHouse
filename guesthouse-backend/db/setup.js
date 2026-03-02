@@ -103,12 +103,28 @@ CREATE TABLE IF NOT EXISTS payments (
   created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- ─── Notifications ──────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS notifications (
+  id            SERIAL PRIMARY KEY,
+  user_id       INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  type          VARCHAR(50) NOT NULL,  -- 'booking_pending', 'booking_approved', 'booking_rejected', 'booking_cancelled'
+  title         VARCHAR(255) NOT NULL,
+  message       TEXT NOT NULL,
+  booking_id    INTEGER REFERENCES bookings(id) ON DELETE SET NULL,
+  is_read       BOOLEAN NOT NULL DEFAULT FALSE,
+  read_at       TIMESTAMPTZ,
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 -- ─── Indexes ──────────────────────────────────────────────────────────────────
 CREATE INDEX IF NOT EXISTS idx_bookings_user      ON bookings(user_id);
 CREATE INDEX IF NOT EXISTS idx_bookings_room      ON bookings(room_id);
 CREATE INDEX IF NOT EXISTS idx_bookings_status    ON bookings(status);
 CREATE INDEX IF NOT EXISTS idx_bookings_dates     ON bookings(check_in, check_out);
 CREATE INDEX IF NOT EXISTS idx_blocked_room_date  ON blocked_dates(room_id, blocked_on);
+CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id);
+CREATE INDEX IF NOT EXISTS idx_notifications_read ON notifications(is_read);
 
 -- ─── Auto-update updated_at ──────────────────────────────────────────────────
 CREATE OR REPLACE FUNCTION set_updated_at()
@@ -119,6 +135,7 @@ $$ LANGUAGE plpgsql;
 DROP TRIGGER IF EXISTS trg_users_updated   ON users;
 DROP TRIGGER IF EXISTS trg_rooms_updated   ON rooms;
 DROP TRIGGER IF EXISTS trg_bookings_updated ON bookings;
+DROP TRIGGER IF EXISTS trg_notifications_updated ON notifications;
 
 CREATE TRIGGER trg_users_updated
   BEFORE UPDATE ON users
@@ -130,6 +147,10 @@ CREATE TRIGGER trg_rooms_updated
 
 CREATE TRIGGER trg_bookings_updated
   BEFORE UPDATE ON bookings
+  FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+CREATE TRIGGER trg_notifications_updated
+  BEFORE UPDATE ON notifications
   FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 `;
 

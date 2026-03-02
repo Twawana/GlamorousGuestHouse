@@ -1,7 +1,7 @@
 import React from "react";
 import { roomImg, formatPrice } from "../utils";
 
-export default function RoomCard({ room, onBook }: { room: any; onBook: (r: any) => void }) {
+export default function RoomCard({ room, onBook, onViewDetails }: { room: any; onBook: (r: any) => void; onViewDetails: (r: any) => void }) {
   return (
     <div className="card room-card fade-in">
       <div style={{ position: "relative", height: 220, overflow: "hidden" }}>
@@ -55,19 +55,28 @@ export default function RoomCard({ room, onBook }: { room: any; onBook: (r: any)
           </div>
         )}
         <hr className="divider" style={{ marginBottom: 16 }} />
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
           <div>
             <span className="serif gold" style={{ fontSize: 24, fontWeight: 600 }}>{formatPrice(room.price_per_night)}</span>
             <span style={{ color: "#5a4f42", fontSize: 12 }}> / night</span>
           </div>
-          <button
-            className="btn-gold"
-            onClick={() => onBook(room)}
-            disabled={room.status !== "available"}
-            style={{ opacity: room.status !== "available" ? 0.4 : 1, cursor: room.status !== "available" ? "not-allowed" : "pointer" }}
-          >
-            Book Now
-          </button>
+          <div style={{ display: "flex", gap: 8, flex: 1 }}>
+            <button
+              className="btn-ghost"
+              onClick={() => onViewDetails(room)}
+              style={{ flex: 1, fontSize: 11 }}
+            >
+              View Details
+            </button>
+            <button
+              className="btn-gold"
+              onClick={() => onBook(room)}
+              disabled={room.status !== "available"}
+              style={{ flex: 1, opacity: room.status !== "available" ? 0.4 : 1, cursor: room.status !== "available" ? "not-allowed" : "pointer" }}
+            >
+              Book Now
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -12,7 +12,29 @@ export const apiFetch = async (path: string, opts: RequestInit = {}) => {
     headers: authHeaders(),
     ...opts,
   });
-  return res.json();
+
+  // try to parse JSON body; fall back to null on failure
+  let data: any = null;
+  try {
+    data = await res.json();
+  } catch {
+    /* ignore */
+  }
+
+  if (!res.ok) {
+    // if unauthorized, clear credentials so app naturally resets
+    if (res.status === 401) {
+      localStorage.removeItem("gg_token");
+      localStorage.removeItem("gg_user");
+      // force a reload so root component can redirect to login
+      window.location.reload();
+    }
+
+    const errMsg = (data && data.error) || res.statusText || "Request failed";
+    throw new Error(errMsg);
+  }
+
+  return data;
 };
 
 export const formatPrice = (n: number) =>

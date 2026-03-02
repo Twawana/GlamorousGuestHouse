@@ -106,7 +106,7 @@ export default function App() {
             ))}
           </div>
 
-          <div style={{ display: "flex", gap: 10, marginLeft: 20 }} className="desktop-nav">
+          <div style={{ display: "flex", gap: 10, marginLeft: 20, alignItems: "center" }} className="desktop-nav">
             {user ? (
               <>
                 <button className="nav-link" onClick={() => goTo("profile")} style={{ padding: "6px 14px" }}>

@@ -129,12 +129,12 @@ router.get('/occupancy', async (req, res) => {
          COALESCE(SUM(
            LEAST(b.check_out, $2::DATE) - GREATEST(b.check_in, $1::DATE)
          ) FILTER (WHERE b.status IN ('approved','completed')), 0) AS booked_days,
-         $3 AS total_days,
+         $3::INT AS total_days,
          ROUND(
            COALESCE(SUM(
              LEAST(b.check_out, $2::DATE) - GREATEST(b.check_in, $1::DATE)
            ) FILTER (WHERE b.status IN ('approved','completed')), 0)::NUMERIC
-           / $3 * 100, 1
+           / $3::NUMERIC * 100, 1
          ) AS occupancy_pct
        FROM rooms r
        LEFT JOIN bookings b ON b.room_id = r.id

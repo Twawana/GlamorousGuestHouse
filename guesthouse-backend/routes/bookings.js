@@ -148,6 +148,10 @@ router.post('/', async (req, res) => {
     );
 
     await client.query('COMMIT');
+    
+    // Booking created
+    const newBooking = rows[0];
+    
     res.status(201).json({
       message: 'Booking submitted. Awaiting staff approval.',
       booking: { ...rows[0], room_name: room.name, nights, total_price },
@@ -226,6 +230,9 @@ RETURNING *
 
     await client.query('COMMIT');
     client.release();
+    
+    // No notifications configured; return updated booking
+    const updatedBooking = rows[0];
     res.json({ message: `Booking ${status}.`, booking: rows[0] });
   } catch (err) {
     try { await client.query('ROLLBACK'); } catch (_) {}
@@ -253,6 +260,16 @@ router.delete('/:id', authenticate, async (req, res) => {
       `UPDATE bookings SET status = 'cancelled', cancelled_at = NOW() WHERE id = $1`,
       [req.params.id]
     );
+    
+    // Trigger notification to staff about cancellation (async, don't wait)
+    const { rows: roomRows } = await pool.query(
+      `SELECT r.id, r.name FROM rooms r JOIN bookings b ON b.room_id = r.id WHERE b.id = $1`,
+      [req.params.id]
+    );
+    if (roomRows.length > 0) {
+      // No notifications configured for cancellations
+    }
+    
     res.json({ message: 'Booking cancelled.' });
   } catch (err) {
     console.error('Cancel booking error:', err);

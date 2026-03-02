@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { apiFetch } from "../utils";
 import RoomCard from "../components/RoomCard";
+import RoomDetailsModal from "../components/RoomDetailsModal";
 import BookingModal from "../components/BookingModal";
 import Spinner from "../components/Spinner";
 import type { CE } from "../types";
@@ -10,6 +11,7 @@ export default function RoomsPage({ user, onToast }: { user?: any; onToast: (m: 
   const [rooms, setRooms] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [filters, setFilters] = useState<Record<string,string>>({ type: "", min_price: "", max_price: "", capacity: "" });
+  const [selectedRoom, setSelectedRoom] = useState<any | null>(null);
   const [bookingRoom, setBookingRoom] = useState<any | null>(null);
   const [successBooking, setSuccessBooking] = useState<any | null>(null);
 
@@ -73,7 +75,7 @@ export default function RoomsPage({ user, onToast }: { user?: any; onToast: (m: 
           <p className="rooms-count">{rooms.length} room{rooms.length !== 1 ? "s" : ""} found</p>
           <div className="rooms-grid">
             {rooms.map(r => (
-              <RoomCard key={r.id} room={r} onBook={setBookingRoom} />
+              <RoomCard key={r.id} room={r} onBook={setBookingRoom} onViewDetails={setSelectedRoom} />
             ))}
           </div>
           {rooms.length === 0 && (
@@ -87,6 +89,10 @@ export default function RoomsPage({ user, onToast }: { user?: any; onToast: (m: 
 
       {bookingRoom && (
         <BookingModal room={bookingRoom} user={user} onClose={() => setBookingRoom(null)} onSuccess={handleBookingSuccess} />
+      )}
+
+      {selectedRoom && (
+        <RoomDetailsModal room={selectedRoom} onClose={() => setSelectedRoom(null)} onBook={setBookingRoom} />
       )}
 
       {successBooking && (
