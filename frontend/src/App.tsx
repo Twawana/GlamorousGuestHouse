@@ -152,26 +152,44 @@ export default function App() {
         `}</style>
       </nav>
 
-      {/* MAIN */}
-      <main style={{ width: "100%", display: "flex", justifyContent: "center", boxSizing: "border-box" }}>
-        <div style={{ width: "100%", maxWidth: 1280, padding: "0 clamp(12px, 3vw, 36px) 100px", boxSizing: "border-box" }}>
-          {page === "home" && <Hero onBrowse={() => goTo("rooms")} onAuth={() => setShowAuth(true)} />}
-          {page === "rooms" && (
-            <div style={{ paddingTop: 44 }}>
-            <div style={{ marginBottom: 32 }}>
-              <h2 className="serif gold" style={{ fontSize: 38, marginBottom: 8 }}>Our Rooms</h2>
-              <p style={{ color: "#5a4f42", fontSize: 14 }}>Thoughtfully curated spaces for discerning guests</p>
+      {/* MAIN - hero full width, others centered */}
+      <main style={{ width: "100%" }}>
+        {page === "home" ? (
+          <div style={{ width: "100%" }}>
+            {/* pass current user so Hero can hide sign-in when already logged in */}
+            <Hero
+              user={user}
+              onBrowse={() => goTo("rooms")}
+              onAuth={() => setShowAuth(true)}
+            />
+          </div>
+        ) : (
+          <div style={{ 
+            width: "100%", 
+            display: "flex", 
+            justifyContent: "center",
+            padding: "0 clamp(12px, 3vw, 36px) 100px",
+            boxSizing: "border-box"
+          }}>
+            <div style={{ width: "100%", maxWidth: 1280 }}>
+              {page === "rooms" && (
+                <div style={{ paddingTop: 44 }}>
+                  <div style={{ marginBottom: 32 }}>
+                    <h2 className="serif gold" style={{ fontSize: 38, marginBottom: 8 }}>Our Rooms</h2>
+                    <p style={{ color: "#5a4f42", fontSize: 14 }}>Thoughtfully curated spaces for discerning guests</p>
+                  </div>
+                  <RoomsPage user={user} onToast={toast_} />
+                </div>
+              )}
+              {page === "bookings" && <div style={{ paddingTop: 44 }}><MyBookingsPage onToast={toast_} /></div>}
+              {page === "admin-bookings" && <div style={{ paddingTop: 44 }}><AdminBookings onToast={toast_} /></div>}
+              {page === "admin-rooms" && <div style={{ paddingTop: 44 }}><AdminRooms onToast={toast_} /></div>}
+              {page === "manage-staff" && <div style={{ paddingTop: 44 }}><ManageStaff onToast={toast_} /></div>}
+              {page === "reports" && <div style={{ paddingTop: 44 }}><ReportsPage /></div>}
+              {page === "profile" && <div style={{ paddingTop: 44 }}><ProfilePage user={user} setUser={setUser} onToast={toast_} /></div>}
             </div>
-            <RoomsPage user={user} onToast={toast_} />
           </div>
         )}
-        {page === "bookings" && <div style={{ paddingTop: 44 }}><MyBookingsPage onToast={toast_} /></div>}
-        {page === "admin-bookings" && <div style={{ paddingTop: 44 }}><AdminBookings onToast={toast_} /></div>}
-        {page === "admin-rooms" && <div style={{ paddingTop: 44 }}><AdminRooms onToast={toast_} /></div>}
-        {page === "manage-staff" && <div style={{ paddingTop: 44 }}><ManageStaff onToast={toast_} /></div>}
-        {page === "reports" && <div style={{ paddingTop: 44 }}><ReportsPage /></div>}
-        {page === "profile" && <div style={{ paddingTop: 44 }}><ProfilePage user={user} setUser={setUser} onToast={toast_} /></div>}
-        </div>
       </main>
 
       {showAuth && (
