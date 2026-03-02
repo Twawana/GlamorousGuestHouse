@@ -70,6 +70,7 @@ export default function LandingPage({ onBrowse, onAuth, user }: {
       {/* HERO SECTION with slideshow */}
       <section className="hero-section" style={{
         position: "relative",
+        width: "100%",
         height: "100vh",
         minHeight: 700,
         display: "flex",

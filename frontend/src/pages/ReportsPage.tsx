@@ -40,13 +40,13 @@ export default function ReportsPage() {
   const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
   return (
-    <div className="fade-in">
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-        <h2 className="serif gold" style={{ fontSize: 30 }}>Reports & Analytics</h2>
+    <div className="fade-in" style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
+        <h2 className="serif gold" style={{ fontSize: "clamp(24px, 5vw, 36px)" }}>Reports & Analytics</h2>
         <select 
           value={year} 
           onChange={(e) => setYear(Number(e.target.value))}
-          style={{ background: "#1A1410", color: "#C9A96E", border: "1px solid #2A2118", padding: "8px 16px" }}
+          style={{ background: "#1A1410", color: "#C9A96E", border: "1px solid #2A2118", padding: "8px 16px", borderRadius: 4 }}
         >
           {[2024, 2025, 2026].map(y => (
             <option key={y} value={y}>{y}</option>
@@ -57,9 +57,9 @@ export default function ReportsPage() {
       {/* Summary Cards */}
       {summary && (
         <>
-          <div style={{ marginBottom: 24 }}>
-            <h3 className="serif" style={{ fontSize: 20, color: "#F5F0EA", marginBottom: 16 }}>Overview</h3>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 14 }}>
+          <div>
+            <h3 className="serif" style={{ fontSize: "clamp(16px, 3vw, 22px)", color: "#F5F0EA", marginBottom: 16 }}>Overview</h3>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12, width: "100%" }}>
               {[
                 { label: "Total Rooms", value: summary.rooms?.total_rooms },
                 { label: "Available", value: summary.rooms?.available },
@@ -70,26 +70,26 @@ export default function ReportsPage() {
                 { label: "Completed", value: summary.bookings?.completed },
                 { label: "Cancelled", value: summary.bookings?.cancelled },
               ].map(s => s.value !== undefined && (
-                <div key={s.label} className="card" style={{ padding: "16px 20px" }}>
-                  <p style={{ color: "#5a4f42", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", marginBottom: 6 }}>{s.label}</p>
-                  <p className="serif gold" style={{ fontSize: 24 }}>{s.value}</p>
+                <div key={s.label} className="card" style={{ padding: "clamp(12px, 2vw, 20px)" }}>
+                  <p style={{ color: "#5a4f42", fontSize: "clamp(9px, 1vw, 11px)", letterSpacing: 1, textTransform: "uppercase", marginBottom: 8 }}>{s.label}</p>
+                  <p className="serif gold" style={{ fontSize: "clamp(20px, 4vw, 28px)" }}>{s.value}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <div style={{ marginBottom: 32 }}>
-            <h3 className="serif" style={{ fontSize: 20, color: "#F5F0EA", marginBottom: 16 }}>Financial</h3>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 14 }}>
+          <div>
+            <h3 className="serif" style={{ fontSize: "clamp(16px, 3vw, 22px)", color: "#F5F0EA", marginBottom: 16 }}>Financial</h3>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, width: "100%" }}>
               {[
                 { label: "Total Revenue", value: formatPrice(summary.revenue?.total_revenue || 0) },
                 { label: "This Month", value: formatPrice(summary.revenue?.this_month_revenue || 0) },
                 { label: "Avg Booking", value: formatPrice(summary.revenue?.avg_booking_value || 0) },
                 { label: "Total Users", value: summary.users?.total_users },
               ].map(s => (
-                <div key={s.label} className="card" style={{ padding: "16px 20px" }}>
-                  <p style={{ color: "#5a4f42", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", marginBottom: 6 }}>{s.label}</p>
-                  <p className="serif gold" style={{ fontSize: 24 }}>{s.value}</p>
+                <div key={s.label} className="card" style={{ padding: "clamp(12px, 2vw, 20px)" }}>
+                  <p style={{ color: "#5a4f42", fontSize: "clamp(9px, 1vw, 11px)", letterSpacing: 1, textTransform: "uppercase", marginBottom: 8 }}>{s.label}</p>
+                  <p className="serif gold" style={{ fontSize: "clamp(20px, 4vw, 28px)" }}>{s.value}</p>
                 </div>
               ))}
             </div>
@@ -99,23 +99,23 @@ export default function ReportsPage() {
 
       {/* Monthly Revenue Chart */}
       {monthly.length > 0 && (
-        <div className="card" style={{ padding: "24px", marginBottom: 24 }}>
-          <h3 className="serif" style={{ fontSize: 22, color: "#F5F0EA", marginBottom: 20 }}>
+        <div className="card" style={{ padding: "clamp(16px, 3vw, 24px)" }}>
+          <h3 className="serif" style={{ fontSize: "clamp(16px, 3vw, 24px)", color: "#F5F0EA", marginBottom: 20 }}>
             Monthly Revenue {year}
           </h3>
-          <div style={{ display: "flex", alignItems: "flex-end", gap: 6, height: 200, padding: "0 4px" }}>
+          <div style={{ display: "flex", alignItems: "flex-end", gap: "clamp(4px, 1vw, 8px)", height: "clamp(150px, 30vh, 280px)", padding: "0 4px", width: "100%" }}>
             {monthly.map((m, i) => {
               const rev = parseFloat(m.revenue || 0);
               const h = Math.max(4, (rev / maxRev) * 170);
               return (
-                <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-                  {rev > 0 && <div style={{ fontSize: 9, color: "#5a4f42" }}>R{(rev/1000).toFixed(0)}k</div>}
+                <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4, minWidth: 0 }}>
+                  {rev > 0 && <div style={{ fontSize: "clamp(8px, 1vw, 10px)", color: "#5a4f42" }}>R{(rev/1000).toFixed(0)}k</div>}
                   <div style={{
                     width: "100%", height: h,
                     background: rev > 0 ? "linear-gradient(to top, #8B6A3E, #C9A96E)" : "#2A2118",
                     borderRadius: "3px 3px 0 0", transition: "height .5s",
                   }} title={`${m.month_name || months[m.month-1]}: ${formatPrice(rev)} (${m.bookings} bookings)`} />
-                  <div style={{ fontSize: 10, color: "#5a4f42" }}>{m.month_name || months[m.month-1]}</div>
+                  <div style={{ fontSize: "clamp(8px, 1vw, 11px)", color: "#5a4f42" }}>{m.month_name || months[m.month-1]}</div>
                 </div>
               );
             })}
@@ -125,28 +125,28 @@ export default function ReportsPage() {
 
       {/* Room Performance */}
       {roomPerf.length > 0 && (
-        <div className="card" style={{ padding: "24px", marginBottom: 24 }}>
-          <h3 className="serif" style={{ fontSize: 22, color: "#F5F0EA", marginBottom: 20 }}>Room Performance</h3>
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+        <div className="card" style={{ padding: "clamp(16px, 3vw, 24px)" }}>
+          <h3 className="serif" style={{ fontSize: "clamp(16px, 3vw, 24px)", color: "#F5F0EA", marginBottom: 20 }}>Room Performance</h3>
+          <div style={{ overflowX: "auto", width: "100%" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "clamp(11px, 1.5vw, 14px)", minWidth: 600 }}>
               <thead>
                 <tr style={{ borderBottom: "1px solid #2A2118" }}>
                   {["Room", "Type", "Price", "Bookings", "Confirmed", "Revenue", "Avg Stay", "Approval %"].map(h => (
-                    <th key={h} style={{ padding: "8px 12px", textAlign: "left", color: "#5a4f42", fontSize: 11, letterSpacing: 1, textTransform: "uppercase" }}>{h}</th>
+                    <th key={h} style={{ padding: "clamp(6px, 1vw, 12px)", textAlign: "left", color: "#5a4f42", fontSize: "clamp(9px, 1vw, 11px)", letterSpacing: 1, textTransform: "uppercase" }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {roomPerf.map((r, i) => (
                   <tr key={i} style={{ borderBottom: "1px solid #1a1410" }}>
-                    <td style={{ padding: "10px 12px", color: "#F5F0EA" }}>{r.name}</td>
-                    <td style={{ padding: "10px 12px", color: "#9E8E78" }}>{r.type}</td>
-                    <td style={{ padding: "10px 12px", color: "#C9A96E" }}>{formatPrice(r.price_per_night)}</td>
-                    <td style={{ padding: "10px 12px", color: "#9E8E78" }}>{r.total_bookings}</td>
-                    <td style={{ padding: "10px 12px", color: "#9E8E78" }}>{r.confirmed_bookings}</td>
-                    <td style={{ padding: "10px 12px", color: "#C9A96E" }}>{formatPrice(r.revenue || 0)}</td>
-                    <td style={{ padding: "10px 12px", color: "#9E8E78" }}>{r.avg_stay_nights ? Number(r.avg_stay_nights).toFixed(1) : '0'} nights</td>
-                    <td style={{ padding: "10px 12px", color: "#9E8E78" }}>{r.approval_rate_pct || 0}%</td>
+                    <td style={{ padding: "clamp(8px, 1.5vw, 12px)", color: "#F5F0EA" }}>{r.name}</td>
+                    <td style={{ padding: "clamp(8px, 1.5vw, 12px)", color: "#9E8E78" }}>{r.type}</td>
+                    <td style={{ padding: "clamp(8px, 1.5vw, 12px)", color: "#C9A96E" }}>{formatPrice(r.price_per_night)}</td>
+                    <td style={{ padding: "clamp(8px, 1.5vw, 12px)", color: "#9E8E78" }}>{r.total_bookings}</td>
+                    <td style={{ padding: "clamp(8px, 1.5vw, 12px)", color: "#9E8E78" }}>{r.confirmed_bookings}</td>
+                    <td style={{ padding: "clamp(8px, 1.5vw, 12px)", color: "#C9A96E" }}>{formatPrice(r.revenue || 0)}</td>
+                    <td style={{ padding: "clamp(8px, 1.5vw, 12px)", color: "#9E8E78" }}>{r.avg_stay_nights ? Number(r.avg_stay_nights).toFixed(1) : '0'} nights</td>
+                    <td style={{ padding: "clamp(8px, 1.5vw, 12px)", color: "#9E8E78" }}>{r.approval_rate_pct || 0}%</td>
                   </tr>
                 ))}
               </tbody>
@@ -157,27 +157,27 @@ export default function ReportsPage() {
 
       {/* Occupancy Rates */}
       {occupancy.length > 0 && (
-        <div className="card" style={{ padding: "24px" }}>
-          <h3 className="serif" style={{ fontSize: 22, color: "#F5F0EA", marginBottom: 20 }}>Occupancy (Last 30 Days)</h3>
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+        <div className="card" style={{ padding: "clamp(16px, 3vw, 24px)" }}>
+          <h3 className="serif" style={{ fontSize: "clamp(16px, 3vw, 24px)", color: "#F5F0EA", marginBottom: 20 }}>Occupancy (Last 30 Days)</h3>
+          <div style={{ overflowX: "auto", width: "100%" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "clamp(11px, 1.5vw, 14px)", minWidth: 500 }}>
               <thead>
                 <tr style={{ borderBottom: "1px solid #2A2118" }}>
                   {["Room", "Booked Days", "Total Days", "Occupancy %"].map(h => (
-                    <th key={h} style={{ padding: "8px 12px", textAlign: "left", color: "#5a4f42", fontSize: 11, letterSpacing: 1, textTransform: "uppercase" }}>{h}</th>
+                    <th key={h} style={{ padding: "clamp(6px, 1vw, 12px)", textAlign: "left", color: "#5a4f42", fontSize: "clamp(9px, 1vw, 11px)", letterSpacing: 1, textTransform: "uppercase" }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {occupancy.slice(0, 5).map((r, i) => (
                   <tr key={i} style={{ borderBottom: "1px solid #1a1410" }}>
-                    <td style={{ padding: "10px 12px", color: "#F5F0EA" }}>{r.name}</td>
-                    <td style={{ padding: "10px 12px", color: "#9E8E78" }}>{r.booked_days}</td>
-                    <td style={{ padding: "10px 12px", color: "#9E8E78" }}>{r.total_days}</td>
-                    <td style={{ padding: "10px 12px", color: "#C9A96E" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <td style={{ padding: "clamp(8px, 1.5vw, 12px)", color: "#F5F0EA" }}>{r.name}</td>
+                    <td style={{ padding: "clamp(8px, 1.5vw, 12px)", color: "#9E8E78" }}>{r.booked_days}</td>
+                    <td style={{ padding: "clamp(8px, 1.5vw, 12px)", color: "#9E8E78" }}>{r.total_days}</td>
+                    <td style={{ padding: "clamp(8px, 1.5vw, 12px)", color: "#C9A96E" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
                         <span>{r.occupancy_pct}%</span>
-                        <div style={{ width: 60, height: 4, background: "#2A2118", borderRadius: 2 }}>
+                        <div style={{ width: "clamp(40px, 10vw, 80px)", height: 4, background: "#2A2118", borderRadius: 2 }}>
                           <div style={{ width: `${r.occupancy_pct}%`, height: 4, background: "#C9A96E", borderRadius: 2 }} />
                         </div>
                       </div>
