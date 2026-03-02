@@ -1,0 +1,3 @@
+/* Admin bookings page styles */
+.tab { background: none; border: none; color: #9E8E78; padding: 8px 12px; }
+.tab.active { border-bottom: 2px solid #C9A96E; color: #F5F0EA; }

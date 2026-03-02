@@ -1,0 +1,119 @@
+/* Manage Staff Page Styles */
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.card {
+  background: #15100B;
+  border: 1px solid #2A2118;
+  border-radius: 8px;
+  transition: border-color 0.2s ease;
+}
+
+.card:hover {
+  border-color: #3D3428;
+}
+
+.tab {
+  background: none;
+  border: none;
+  color: #9E8E78;
+  padding: 12px 16px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  border-bottom: 2px solid transparent;
+}
+
+.tab:hover {
+  color: #C9A96E;
+}
+
+.tab.active {
+  color: #C9A96E;
+  border-bottom-color: #C9A96E;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+  width: 100%;
+  background: #1a1410;
+  border: 1px solid #2A2118;
+  color: #F5F0EA;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+select:focus {
+  outline: none;
+  border-color: #C9A96E;
+}
+
+input::placeholder {
+  color: #5a4f42;
+}
+
+select option {
+  background: #0D0A07;
+  color: #F5F0EA;
+}
+
+.btn-gold {
+  background: #C9A96E;
+  color: #0D0A07;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-gold:hover:not(:disabled) {
+  background: #D4B896;
+}
+
+.btn-gold:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: #9E8E78;
+  border: 1px solid #2A2118;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-ghost:hover {
+  color: #C9A96E;
+  border-color: #C9A96E;
+}

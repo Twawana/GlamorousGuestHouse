@@ -1,0 +1,19 @@
+/* Rooms page styles */
+.rooms-filters {
+  background: #17130F;
+  border: 1px solid #2A2118;
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 28px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+.rooms-filters .filter-col { flex: 1 1 140px; }
+.rooms-filters label { color: #9E8E78; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 6px; }
+.rooms-count { color: #5a4f42; font-size: 13px; margin-bottom: 18px; }
+.rooms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+.no-rooms { text-align: center; padding: 60px 0; color: #5a4f42; }
+.ref-box { background: #1C1712; border: 1px solid rgba(201,169,110,.27); border-radius: 8px; padding: 12px 20px; margin-bottom: 20px; }
+.ref { font-size: 22px; letter-spacing: 2px; }
