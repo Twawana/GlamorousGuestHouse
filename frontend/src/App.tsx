@@ -155,22 +155,22 @@ export default function App() {
       {/* MAIN - hero full width, others centered */}
       <main style={{ width: "100%" }}>
         {page === "home" ? (
-          <div style={{ width: "100%" }}>
-            {/* pass current user so Hero can hide sign-in when already logged in */}
-            <Hero
-              user={user}
-              onBrowse={() => goTo("rooms")}
-              onAuth={() => setShowAuth(true)}
-            />
-          </div>
+          <div style={{ width: "100vw" }}>
+  <Hero
+    user={user}
+    onBrowse={() => goTo("rooms")}
+    onAuth={() => setShowAuth(true)}
+  />
+</div>
         ) : (
-          <div style={{ 
-            width: "100%", 
-            display: "flex", 
-            justifyContent: "center",
-            padding: "0 clamp(12px, 3vw, 36px) 100px",
-            boxSizing: "border-box"
-          }}>
+<div style={{ 
+  width: "100%", 
+  display: "flex", 
+  justifyContent: "center",
+  padding: "0 24px 100px 24px",
+  boxSizing: "border-box",
+  overflowX: "auto"
+}}>
             <div style={{ width: "100%", maxWidth: 1280 }}>
               {page === "rooms" && (
                 <div style={{ paddingTop: 44 }}>

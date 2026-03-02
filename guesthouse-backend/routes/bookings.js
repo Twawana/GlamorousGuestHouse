@@ -59,7 +59,7 @@ router.get('/:id', authenticate, async (req, res) => {
        FROM bookings b
        JOIN rooms r ON r.id = b.room_id
        LEFT JOIN users u ON u.id = b.user_id
-       WHERE b.id = $1`,
+       WHERE b.id::text = $1::text OR b.booking_ref = $1::text`,
       [req.params.id]
     );
     if (rows.length === 0) return res.status(404).json({ error: 'Booking not found.' });
@@ -245,7 +245,7 @@ RETURNING *
 // ─── DELETE /api/bookings/:id  (customer cancels own booking) ─────────────────
 router.delete('/:id', authenticate, async (req, res) => {
   try {
-    const { rows } = await pool.query('SELECT * FROM bookings WHERE id = $1', [req.params.id]);
+    const { rows } = await pool.query('SELECT * FROM bookings WHERE id::text = $1::text OR booking_ref = $1::text', [req.params.id]);
     if (rows.length === 0) return res.status(404).json({ error: 'Booking not found.' });
 
     const booking = rows[0];
@@ -257,13 +257,13 @@ router.delete('/:id', authenticate, async (req, res) => {
     }
 
     await pool.query(
-      `UPDATE bookings SET status = 'cancelled', cancelled_at = NOW() WHERE id = $1`,
+      `UPDATE bookings SET status = 'cancelled', cancelled_at = NOW() WHERE id::text = $1::text OR booking_ref = $1::text`,
       [req.params.id]
     );
     
     // Trigger notification to staff about cancellation (async, don't wait)
     const { rows: roomRows } = await pool.query(
-      `SELECT r.id, r.name FROM rooms r JOIN bookings b ON b.room_id = r.id WHERE b.id = $1`,
+      `SELECT r.id, r.name FROM rooms r JOIN bookings b ON b.room_id = r.id WHERE b.id::text = $1::text OR b.booking_ref = $1::text`,
       [req.params.id]
     );
     if (roomRows.length > 0) {
