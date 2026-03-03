@@ -1,5 +1,7 @@
 export const API = (import.meta as any)?.env?.VITE_API_BASE || "http://localhost:5000/api";
 
+// Formspree integration removed — booking copies are no longer sent via Formspree.
+
 export const getToken = (): string | null => localStorage.getItem("gg_token");
 
 export const authHeaders = () => ({
@@ -37,12 +39,10 @@ export const apiFetch = async (path: string, opts: RequestInit = {}) => {
   return data;
 };
 
-export const formatPrice = (n: number) =>
-  new Intl.NumberFormat("en-ZA", { 
-    style: "currency", 
-    currency: "ZAR", 
-    maximumFractionDigits: 0 
-  }).format(n);
+export const formatPrice = (n: number) => {
+  const formatted = new Intl.NumberFormat("en-ZA", { maximumFractionDigits: 0 }).format(n);
+  return `N$${formatted}`;
+};
 
 export const formatDate = (d: string | Date) =>
   new Date(d).toLocaleDateString("en-GB", { 

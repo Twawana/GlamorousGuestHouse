@@ -52,7 +52,7 @@ export default function RoomsPage({ user, onToast }: { user?: any; onToast: (m: 
         </div>
         <div className="filter-col">
           <label>Min Price</label>
-          <input type="number" placeholder="R 0" value={filters.min_price} onChange={setF("min_price")} />
+          <input type="number" placeholder="N$ 0" value={filters.min_price} onChange={setF("min_price")} />
         </div>
         <div className="filter-col">
           <label>Max Price</label>

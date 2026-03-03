@@ -202,8 +202,26 @@ export default function App() {
       {toast && <Toast key={toast.key} msg={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
 
       <footer style={{ borderTop: "1px solid #1a1410", padding: "36px clamp(16px,4vw,48px)", textAlign: "center" }}>
-        <p className="serif gold" style={{ fontSize: 18, marginBottom: 8 }}>Glamorous GuestHouse</p>
-        <p style={{ color: "#3D3428", fontSize: 12, letterSpacing: 1 }}>Retreat · Western Cape · South Africa</p>
+        <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap", justifyContent: "center" }}>
+          <div style={{ flex: "1 1 280px", minWidth: 220, textAlign: "left" }}>
+            <p className="serif gold" style={{ fontSize: 18, marginBottom: 8 }}>Glamorous GuestHouse</p>
+            <p style={{ color: "#3D3428", fontSize: 12, letterSpacing: 1 }}>Penguin Street, 19 · Windhoek · Namibia</p>
+          </div>
+
+          <div style={{ flex: "1 1 320px", minWidth: 260, display: "flex", justifyContent: "center" }}>
+            <div style={{ width: "100%", maxWidth: 420, borderRadius: 8, overflow: "hidden", boxShadow: "0 4px 12px rgba(0,0,0,.35)" }}>
+              <iframe
+                title="Glamorous GuestHouse Location"
+                src="https://www.google.com/maps?q=Penguin%20Street%2019%20Windhoek%20Namibia&output=embed"
+                width="100%"
+                height="220"
+                style={{ border: 0 }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
   );
