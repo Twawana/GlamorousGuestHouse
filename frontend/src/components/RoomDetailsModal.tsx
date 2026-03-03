@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { roomImages, formatPrice } from "../utils";
 
 export default function RoomDetailsModal({
@@ -192,7 +192,7 @@ export default function RoomDetailsModal({
             }}
           >
             {room.description ||
-              "A beautifully appointed room with premium finishes and thoughtful amenities for your comfort."}
+              ""}
           </p>
 
           {/* Key Details */}

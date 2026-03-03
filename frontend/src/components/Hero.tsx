@@ -308,68 +308,6 @@ export default function LandingPage({ onBrowse, onAuth, user }: {
         </section>
       )}
 
-      {/* TESTIMONIALS */}
-      <section style={{
-        background: "linear-gradient(0deg, #0D0A07 0%, #15100B 100%)",
-        padding: "80px 24px",
-        marginBottom: 40
-      }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 48 }}>
-            <span className="serif gold" style={{ fontSize: 12, letterSpacing: 4, textTransform: "uppercase" }}>
-              Guest Stories
-            </span>
-            <h2 className="serif" style={{ fontSize: 42, margin: "12px 0", color: "#F5F0EA" }}>
-              What Our Guests Say
-            </h2>
-          </div>
-
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: 30
-          }}>
-            {testimonials.map((t, idx) => (
-              <div key={idx} style={{
-                padding: 30,
-                background: "rgba(20, 15, 10, 0.6)",
-                border: "1px solid #2A2118",
-                position: "relative"
-              }}>
-                <div style={{ fontSize: 60, color: "#C9A96E", opacity: 0.2, position: "absolute", top: 10, right: 20 }}>
-                  "
-                </div>
-                <div style={{ marginBottom: 20 }}>
-                  <div style={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: "50%",
-                    background: "#2A2118",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "#C9A96E",
-                    fontWeight: "bold",
-                    fontSize: 18,
-                    marginBottom: 12
-                  }}>
-                    {t.name.charAt(0)}
-                  </div>
-                  <p className="serif" style={{ fontSize: 16, color: "#F5F0EA" }}>{t.name}</p>
-                  <p style={{ fontSize: 12, color: "#5a4f42" }}>{t.location} · {t.date}</p>
-                </div>
-                <p style={{ color: "#9E8E78", fontSize: 14, lineHeight: 1.8, fontStyle: "italic", position: "relative", zIndex: 2 }}>
-                  "{t.text}"
-                </p>
-                <div style={{ marginTop: 16, color: "#C9A96E" }}>
-                  {"★".repeat(t.rating)}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* CTA SECTION */}
       <section style={{
         maxWidth: 900,

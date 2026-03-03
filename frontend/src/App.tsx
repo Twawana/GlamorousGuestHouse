@@ -11,6 +11,7 @@ import ProfilePage from "./pages/ProfilePage";
 import ManageStaff from "./pages/ManageStaff";
 import type { ToastType } from "./types";
 import { apiFetch } from "./utils";
+import { FaFacebookF, FaInstagram, FaWhatsapp } from "react-icons/fa";
 
 // Authentication and Staff Management App
 
@@ -201,28 +202,117 @@ export default function App() {
 
       {toast && <Toast key={toast.key} msg={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
 
-      <footer style={{ borderTop: "1px solid #1a1410", padding: "36px clamp(16px,4vw,48px)", textAlign: "center" }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap", justifyContent: "center" }}>
-          <div style={{ flex: "1 1 280px", minWidth: 220, textAlign: "left" }}>
-            <p className="serif gold" style={{ fontSize: 18, marginBottom: 8 }}>Glamorous GuestHouse</p>
-            <p style={{ color: "#3D3428", fontSize: 12, letterSpacing: 1 }}>Penguin Street, 19 · Windhoek · Namibia</p>
-          </div>
+      <footer
+  style={{
+    borderTop: "1px solid #2A2118",
+    padding: "48px clamp(16px,4vw,48px)",
+    background: "#0B0806",
+    marginTop: 60,
+  }}
+>
+  <div
+    style={{
+      maxWidth: 1280,
+      margin: "0 auto",
+      display: "flex",
+      gap: 40,
+      alignItems: "flex-start",
+      flexWrap: "wrap",
+      justifyContent: "space-between",
+    }}
+  >
+    {/* LEFT SECTION */}
+    <div style={{ flex: "1 1 280px", minWidth: 220 }}>
+      <p
+        className="serif gold"
+        style={{ fontSize: 20, marginBottom: 12 }}
+      >
+        Glamorous GuestHouse
+      </p>
 
-          <div style={{ flex: "1 1 320px", minWidth: 260, display: "flex", justifyContent: "center" }}>
-            <div style={{ width: "100%", maxWidth: 420, borderRadius: 8, overflow: "hidden", boxShadow: "0 4px 12px rgba(0,0,0,.35)" }}>
-              <iframe
-                title="Glamorous GuestHouse Location"
-                src="https://www.google.com/maps?q=Penguin%20Street%2019%20Windhoek%20Namibia&output=embed"
-                width="100%"
-                height="220"
-                style={{ border: 0 }}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
-          </div>
-        </div>
-      </footer>
+      <p style={{ color: "#8B7355", fontSize: 13, marginBottom: 8 }}>
+        Penguin Street, 19 · Windhoek · Namibia
+      </p>
+
+      <p style={{ color: "#C9A96E", fontSize: 14, marginBottom: 16 }}>
+        📞 +264 81 234 5678
+      </p>
+
+      {/* SOCIAL ICONS */}
+      <div style={{ display: "flex", gap: 16 }}>
+        <a
+          href="https://facebook.com"
+          target="_blank"
+          rel="noreferrer"
+          style={{ color: "#C9A96E", transition: "0.3s" }}
+        >
+          <FaFacebookF size={18} />
+        </a>
+
+        <a
+          href="https://wa.me/264812345678"
+          target="_blank"
+          rel="noreferrer"
+          style={{ color: "#C9A96E", transition: "0.3s" }}
+        >
+          <FaWhatsapp size={18} />
+        </a>
+
+        <a
+          href="https://instagram.com"
+          target="_blank"
+          rel="noreferrer"
+          style={{ color: "#C9A96E", transition: "0.3s" }}
+        >
+          <FaInstagram size={18} />
+        </a>
+      </div>
+    </div>
+
+    {/* MAP SECTION */}
+    <div
+      style={{
+        flex: "1 1 380px",
+        minWidth: 260,
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 420,
+          borderRadius: 12,
+          overflow: "hidden",
+          boxShadow: "0 6px 20px rgba(0,0,0,.45)",
+        }}
+      >
+        <iframe
+          title="Glamorous GuestHouse Location"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3377.8957508883704!2d17.082604!3d-22.559203!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1d4555277f47a581%3A0x1234567890abcdef!2sPenguin%20Street%2019%2C%20Windhoek%2C%20Namibia!5e0!3m2!1sen!2sna!4v1234567890"
+          width="100%"
+          height="220"
+          style={{ border: 0 }}
+          loading="lazy"
+          allowFullScreen
+        />
+      </div>
+    </div>
+  </div>
+
+  {/* COPYRIGHT */}
+  <div
+    style={{
+      marginTop: 40,
+      textAlign: "center",
+      fontSize: 12,
+      color: "#6F5E46",
+    }}
+  >
+    © {new Date().getFullYear()} Glamorous GuestHouse. All rights reserved.
+    <p>TCentral</p>
+  </div>
+</footer>
     </div>
   );
 }

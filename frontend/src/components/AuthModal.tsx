@@ -101,7 +101,7 @@ export default function AuthModal({ onClose, onSuccess }: { onClose: () => void;
           {mode === "register" && (
             <div>
               <label style={{ color: "#9E8E78", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Full Name</label>
-              <input name="name" id="auth-name" placeholder="Jane Doe" value={form.name} onChange={set("name")} />
+              <input name="name" id="auth-name" placeholder="Glamorous Guest" value={form.name} onChange={set("name")} />
             </div>
           )}
           <div>
@@ -118,7 +118,7 @@ export default function AuthModal({ onClose, onSuccess }: { onClose: () => void;
           {mode === "register" && (
             <div>
               <label style={{ color: "#9E8E78", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Phone (optional)</label>
-              <input name="phone" id="auth-phone" placeholder="+27 82 000 0000" value={form.phone} onChange={set("phone")} />
+              <input name="phone" id="auth-phone" placeholder="+264 81 000 0000" value={form.phone} onChange={set("phone")} />
             </div>
           )}
 
@@ -156,7 +156,13 @@ export default function AuthModal({ onClose, onSuccess }: { onClose: () => void;
 
         {mode === "login" && (
           <p style={{ color: "#5a4f42", fontSize: 12, marginTop: 16, textAlign: "center" }}>
-            Demo: owner@glamorous.com / Glamorous!23
+            Don't have an account?{" "}
+            <button
+              onClick={() => { setMode("register"); setErr(""); }}
+              style={{ background: "none", border: "none", color: "#C9A96E", fontSize: 12, cursor: "pointer", padding: 0, textDecoration: "underline" }}
+            >
+              Register here
+            </button>
           </p>
         )}
       </div>
