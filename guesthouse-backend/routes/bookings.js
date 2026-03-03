@@ -1,6 +1,8 @@
 const express = require('express');
 const pool = require('../db/pool');
 const { authenticate, requireStaffOrOwner } = require('../middleware/auth');
+const mailer = require('../mailer');
+const notifications = require('../utils/notifications');
 
 const router = express.Router();
 
@@ -11,7 +13,6 @@ router.get('/', authenticate, async (req, res) => {
   const params = [];
   const conditions = [];
 
-  // Non-staff/owner customers see only their own bookings
   if (!(['owner','staff','admin'].includes(req.user.role))) {
     params.push(req.user.id);
     conditions.push(`b.user_id = $${params.length}`);
@@ -65,7 +66,6 @@ router.get('/:id', authenticate, async (req, res) => {
     if (rows.length === 0) return res.status(404).json({ error: 'Booking not found.' });
 
     const booking = rows[0];
-    // Customers can only see their own booking
     if (!(['owner','staff','admin'].includes(req.user.role)) && booking.user_id !== req.user.id) {
       return res.status(403).json({ error: 'Access denied.' });
     }
@@ -77,7 +77,6 @@ router.get('/:id', authenticate, async (req, res) => {
 
 // ─── POST /api/bookings  (authenticated or guest) ────────────────────────────
 router.post('/', async (req, res) => {
-  // JWT is optional for guest bookings; check manually
   let userId = null;
   const authHeader = req.headers['authorization'];
   if (authHeader) {
@@ -104,15 +103,13 @@ router.post('/', async (req, res) => {
   try {
     await client.query('BEGIN');
 
-    // Lock room row to prevent race conditions
     const { rows: roomRows } = await client.query(
       'SELECT * FROM rooms WHERE id = $1 FOR UPDATE', [room_id]
     );
-    if (roomRows.length === 0) { await client.query('ROLLBACK'); return res.status(404).json({ error: 'Room not found.' }); }
+    if (roomRows.length === 0) { await client.query('ROLLBACK'); console.warn('[Bookings] Create failed: room not found', { room_id }); return res.status(404).json({ error: 'Room not found.' }); }
     const room = roomRows[0];
-    if (room.status !== 'available') { await client.query('ROLLBACK'); return res.status(409).json({ error: 'Room is not available.' }); }
+    if (room.status !== 'available') { await client.query('ROLLBACK'); console.warn('[Bookings] Create failed: room not available', { room_id, status: room.status }); return res.status(409).json({ error: 'Room is not available.' }); }
 
-    // Check for booking conflicts
     const { rows: conflicts } = await client.query(
       `SELECT id FROM bookings
        WHERE room_id = $1
@@ -123,20 +120,20 @@ router.post('/', async (req, res) => {
     );
     if (conflicts.length > 0) {
       await client.query('ROLLBACK');
-      return res.status(409).json({ error: 'Room is already booked for the selected dates.' });
+      console.warn('[Bookings] Create failed: date conflict', { room_id, check_in, check_out, conflicts: conflicts.map(c => c.id) });
+      return res.status(409).json({ error: 'Room is already booked for the selected dates.', conflict_ids: conflicts.map(c => c.id) });
     }
 
-    // Check blocked dates
     const { rows: blocked } = await client.query(
       `SELECT blocked_on FROM blocked_dates WHERE room_id = $1 AND blocked_on >= $2 AND blocked_on < $3`,
       [room_id, check_in, check_out]
     );
     if (blocked.length > 0) {
       await client.query('ROLLBACK');
+      console.warn('[Bookings] Create failed: blocked dates present', { room_id, check_in, check_out, blocked_dates: blocked.map(b => b.blocked_on) });
       return res.status(409).json({ error: 'Some dates in your range are blocked.', blocked_dates: blocked.map(b => b.blocked_on) });
     }
 
-    // Calculate total
     const nights = Math.ceil((new Date(check_out) - new Date(check_in)) / (1000 * 60 * 60 * 24));
     const total_price = nights * room.price_per_night;
 
@@ -148,13 +145,17 @@ router.post('/', async (req, res) => {
     );
 
     await client.query('COMMIT');
-    
-    // Booking created
+
     const newBooking = rows[0];
-    
+
+    // ✉ Notify staff of new booking (async — don't block response)
+    notifications.notifyStaffNewBooking(newBooking, room).catch(e =>
+      console.error('[Mailer] notifyStaffNewBooking failed:', e.message)
+    );
+
     res.status(201).json({
       message: 'Booking submitted. Awaiting staff approval.',
-      booking: { ...rows[0], room_name: room.name, nights, total_price },
+      booking: { ...newBooking, room_name: room.name, nights, total_price },
     });
   } catch (err) {
     await client.query('ROLLBACK');
@@ -176,48 +177,48 @@ router.put('/:id/status', authenticate, requireStaffOrOwner, async (req, res) =>
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
-    // If approving, ensure there are no conflicting approved bookings for the same room
+
     if (status === 'approved') {
-      const targetSql = `SELECT room_id, check_in, check_out FROM bookings WHERE id::text = $1::text`;
-      console.log('DEBUG: running target query', targetSql, [req.params.id]);
-      const { rows: targetRows } = await client.query(targetSql, [req.params.id]);
-      if (targetRows.length === 0) { 
-        await client.query('ROLLBACK'); 
-        client.release(); 
-        return res.status(404).json({ error: 'Booking not found.' }); 
+      const { rows: targetRows } = await client.query(
+        `SELECT room_id, check_in, check_out FROM bookings WHERE id::text = $1::text`,
+        [req.params.id]
+      );
+      if (targetRows.length === 0) {
+        await client.query('ROLLBACK');
+        client.release();
+        return res.status(404).json({ error: 'Booking not found.' });
       }
       const { room_id: roomId, check_in: tCheckIn, check_out: tCheckOut } = targetRows[0];
-      const conflictSql = `SELECT id FROM bookings WHERE id::text != $1::text AND room_id::text = $2::text AND status = 'approved' AND check_in < $4 AND check_out > $3`;
-      console.log('DEBUG: running conflict check', conflictSql, [req.params.id, roomId, tCheckIn, tCheckOut]);
-      const { rows: existing } = await client.query(conflictSql, [req.params.id, roomId, tCheckIn, tCheckOut]);
-      if (existing.length > 0) { 
-        await client.query('ROLLBACK'); 
-        client.release(); 
-        return res.status(409).json({ error: 'Cannot approve: room already has an approved booking for these dates.' }); 
+      const { rows: existing } = await client.query(
+        `SELECT id FROM bookings WHERE id::text != $1::text AND room_id::text = $2::text AND status = 'approved' AND check_in < $4 AND check_out > $3`,
+        [req.params.id, roomId, tCheckIn, tCheckOut]
+      );
+      if (existing.length > 0) {
+        await client.query('ROLLBACK');
+        client.release();
+        return res.status(409).json({ error: 'Cannot approve: room already has an approved booking for these dates.' });
       }
     }
 
-    const updateSql = `
-      UPDATE bookings
-SET status = $1::varchar,
-    staff_notes = COALESCE($2, staff_notes),
-    approved_by = CASE WHEN $1::varchar = 'approved' THEN $3 ELSE approved_by END,
-    approved_at = CASE WHEN $1::varchar = 'approved' THEN NOW() ELSE approved_at END,
-    cancelled_at = CASE WHEN $1::varchar = 'cancelled' THEN NOW() ELSE cancelled_at END
-WHERE id = $4
-RETURNING *
-    `;
-    
-    console.log('DEBUG: running update', updateSql, [status, staff_notes || null, req.user.id, req.params.id]);
-    const { rows } = await client.query(updateSql, [status, staff_notes || null, req.user.id, req.params.id]);
-    
+    const { rows } = await client.query(
+      `UPDATE bookings
+       SET status = $1::varchar,
+           staff_notes = COALESCE($2, staff_notes),
+           approved_by = CASE WHEN $1::varchar = 'approved' THEN $3 ELSE approved_by END,
+           approved_at = CASE WHEN $1::varchar = 'approved' THEN NOW() ELSE approved_at END,
+           cancelled_at = CASE WHEN $1::varchar = 'cancelled' THEN NOW() ELSE cancelled_at END
+       WHERE id = $4
+       RETURNING *`,
+      [status, staff_notes || null, req.user.id, req.params.id]
+    );
+
     if (rows.length === 0) {
       await client.query('ROLLBACK');
       client.release();
       return res.status(404).json({ error: 'Booking not found.' });
     }
 
-    // Log staff action in audit table (use the same client/transaction)
+    // Audit log
     try {
       await client.query(
         `INSERT INTO staff_actions (actor_id, actor_role, action, target_table, target_id, details)
@@ -230,10 +231,24 @@ RETURNING *
 
     await client.query('COMMIT');
     client.release();
-    
-    // No notifications configured; return updated booking
+
     const updatedBooking = rows[0];
-    res.json({ message: `Booking ${status}.`, booking: rows[0] });
+
+    // ✉ Fetch room info then send guest email (async — don't block response)
+    pool.query('SELECT * FROM rooms WHERE id = $1', [updatedBooking.room_id])
+      .then(({ rows: roomRows }) => {
+        if (roomRows.length === 0) return;
+        const room = roomRows[0];
+        if (status === 'approved') {
+          return mailer.notifyGuestApproved(updatedBooking, room, staff_notes || '');
+        }
+        if (status === 'rejected') {
+          return mailer.notifyGuestRejected(updatedBooking, room, staff_notes || '');
+        }
+      })
+      .catch(e => console.error('[Mailer] Guest notification failed:', e.message));
+
+    res.json({ message: `Booking ${status}.`, booking: updatedBooking });
   } catch (err) {
     try { await client.query('ROLLBACK'); } catch (_) {}
     client.release();
@@ -245,7 +260,10 @@ RETURNING *
 // ─── DELETE /api/bookings/:id  (customer cancels own booking) ─────────────────
 router.delete('/:id', authenticate, async (req, res) => {
   try {
-    const { rows } = await pool.query('SELECT * FROM bookings WHERE id::text = $1::text OR booking_ref = $1::text', [req.params.id]);
+    const { rows } = await pool.query(
+      'SELECT * FROM bookings WHERE id::text = $1::text OR booking_ref = $1::text',
+      [req.params.id]
+    );
     if (rows.length === 0) return res.status(404).json({ error: 'Booking not found.' });
 
     const booking = rows[0];
@@ -260,16 +278,15 @@ router.delete('/:id', authenticate, async (req, res) => {
       `UPDATE bookings SET status = 'cancelled', cancelled_at = NOW() WHERE id::text = $1::text OR booking_ref = $1::text`,
       [req.params.id]
     );
-    
-    // Trigger notification to staff about cancellation (async, don't wait)
-    const { rows: roomRows } = await pool.query(
-      `SELECT r.id, r.name FROM rooms r JOIN bookings b ON b.room_id = r.id WHERE b.id::text = $1::text OR b.booking_ref = $1::text`,
-      [req.params.id]
-    );
-    if (roomRows.length > 0) {
-      // No notifications configured for cancellations
-    }
-    
+
+    // ✉ Notify staff of cancellation (async — don't block response)
+    pool.query('SELECT * FROM rooms WHERE id = $1', [booking.room_id])
+      .then(({ rows: roomRows }) => {
+        if (roomRows.length === 0) return;
+        return mailer.notifyStaffCancellation(booking, roomRows[0]);
+      })
+      .catch(e => console.error('[Mailer] notifyStaffCancellation failed:', e.message));
+
     res.json({ message: 'Booking cancelled.' });
   } catch (err) {
     console.error('Cancel booking error:', err);

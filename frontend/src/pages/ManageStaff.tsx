@@ -125,17 +125,17 @@ export default function ManageStaff({ onToast }: { onToast: (m: string, t?: "suc
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             <div>
               <label style={{ color: "#9E8E78", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Full Name</label>
-              <input placeholder="Jane Doe" value={form.name} onChange={set("name")} />
+              <input name="name" id="staff-name" placeholder="Jane Doe" value={form.name} onChange={set("name")} />
             </div>
 
             <div>
               <label style={{ color: "#9E8E78", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Email</label>
-              <input type="email" placeholder="jane@example.com" value={form.email} onChange={set("email")} />
+              <input name="email" id="staff-email" type="email" placeholder="jane@example.com" value={form.email} onChange={set("email") } />
             </div>
 
             <div>
               <label style={{ color: "#9E8E78", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Password</label>
-              <input type="password" placeholder="••••••••" value={form.password} onChange={set("password")} />
+              <input name="password" id="staff-password" type="password" placeholder="••••••••" value={form.password} onChange={set("password")} />
             </div>
 
             <div>

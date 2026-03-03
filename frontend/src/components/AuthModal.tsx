@@ -101,16 +101,16 @@ export default function AuthModal({ onClose, onSuccess }: { onClose: () => void;
           {mode === "register" && (
             <div>
               <label style={{ color: "#9E8E78", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Full Name</label>
-              <input placeholder="Jane Doe" value={form.name} onChange={set("name")} />
+              <input name="name" id="auth-name" placeholder="Jane Doe" value={form.name} onChange={set("name")} />
             </div>
           )}
           <div>
             <label style={{ color: "#9E8E78", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Email</label>
-            <input type="email" placeholder="you@example.com" value={form.email} onChange={set("email")} onKeyDown={e => e.key === "Enter" && submit()} />
+            <input name="email" id="auth-email" type="email" placeholder="you@example.com" value={form.email} onChange={set("email")} onKeyDown={e => e.key === "Enter" && submit()} />
           </div>
           <div>
             <label style={{ color: "#9E8E78", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Password</label>
-            <input type="password" placeholder="••••••••" value={form.password} onChange={set("password")} onKeyDown={e => e.key === "Enter" && submit()} />
+            <input name="password" id="auth-password" type="password" placeholder="••••••••" value={form.password} onChange={set("password")} onKeyDown={e => e.key === "Enter" && submit()} />
             {mode === "register" && (
               <p style={{ color: "#5a4f42", fontSize: 11, marginTop: 4 }}>Minimum 6 characters</p>
             )}
@@ -118,7 +118,7 @@ export default function AuthModal({ onClose, onSuccess }: { onClose: () => void;
           {mode === "register" && (
             <div>
               <label style={{ color: "#9E8E78", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Phone (optional)</label>
-              <input placeholder="+27 82 000 0000" value={form.phone} onChange={set("phone")} />
+              <input name="phone" id="auth-phone" placeholder="+27 82 000 0000" value={form.phone} onChange={set("phone")} />
             </div>
           )}
 

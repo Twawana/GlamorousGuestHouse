@@ -270,15 +270,15 @@ export default function AdminRooms({ onToast }: { onToast: (m: string, t?: "succ
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 14 }}>
             <div>
               <label style={{ color: "#9E8E78", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Room Name *</label>
-              <input placeholder="The Golden Suite" value={form.name} onChange={sf("name")} />
+              <input name="name" id="room-name" placeholder="The Golden Suite" value={form.name} onChange={sf("name")} />
             </div>
             <div>
               <label style={{ color: "#9E8E78", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Price / Night (R) *</label>
-              <input type="number" placeholder="500" value={form.price_per_night} onChange={sf("price_per_night")} />
+              <input name="price_per_night" id="room-price" type="number" placeholder="500" value={form.price_per_night} onChange={sf("price_per_night")} />
             </div>
             <div>
               <label style={{ color: "#9E8E78", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Size (m²)</label>
-              <input type="number" placeholder="45" value={form.size_sqm} onChange={sf("size_sqm")} />
+              <input name="size_sqm" id="room-size" type="number" placeholder="45" value={form.size_sqm} onChange={sf("size_sqm")} />
             </div>
             <div>
               <label style={{ color: "#9E8E78", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Type</label>
@@ -288,7 +288,7 @@ export default function AdminRooms({ onToast }: { onToast: (m: string, t?: "succ
             </div>
             <div>
               <label style={{ color: "#9E8E78", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Capacity</label>
-              <input type="number" min={1} value={form.capacity} onChange={sf("capacity")} />
+              <input name="capacity" id="room-capacity" type="number" min={1} value={form.capacity} onChange={sf("capacity")} />
             </div>
             <div>
               <label style={{ color: "#9E8E78", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Status</label>
@@ -298,11 +298,11 @@ export default function AdminRooms({ onToast }: { onToast: (m: string, t?: "succ
             </div>
             <div style={{ gridColumn: "1/-1" }}>
               <label style={{ color: "#9E8E78", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Amenities (comma-separated)</label>
-              <input placeholder="King Bed, Sea View, Jacuzzi, Mini Bar" value={form.amenities} onChange={sf("amenities")} />
+              <input name="amenities" id="room-amenities" placeholder="King Bed, Sea View, Jacuzzi, Mini Bar" value={form.amenities} onChange={sf("amenities")} />
             </div>
             <div style={{ gridColumn: "1/-1" }}>
               <label style={{ color: "#9E8E78", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Description</label>
-              <textarea rows={3} value={form.description} onChange={sf("description")} />
+              <textarea name="description" id="room-description" rows={3} value={form.description} onChange={sf("description")} />
             </div>
           </div>
           <div style={{ display: "flex", gap: 10, marginTop: 18 }}>

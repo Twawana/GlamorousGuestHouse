@@ -36,15 +36,15 @@ export default function ProfilePage({ user, setUser, onToast }: { user: any; set
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <div>
             <label style={{ color: "#9E8E78", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Display Name</label>
-            <input value={form.name} onChange={e => setForm((f: any) => ({ ...f, name: e.target.value }))} />
+            <input name="name" id="profile-name" value={form.name} onChange={e => setForm((f: any) => ({ ...f, name: e.target.value }))} />
           </div>
           <div>
             <label style={{ color: "#9E8E78", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Email</label>
-            <input value={user?.email} disabled style={{ opacity: .5, cursor: "not-allowed" }} />
+            <input name="email" id="profile-email" value={user?.email} disabled style={{ opacity: .5, cursor: "not-allowed" }} />
           </div>
           <div>
             <label style={{ color: "#9E8E78", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Phone</label>
-            <input value={form.phone} onChange={e => setForm((f: any) => ({ ...f, phone: e.target.value }))} placeholder="+27 82 000 0000" />
+            <input name="phone" id="profile-phone" value={form.phone} onChange={e => setForm((f: any) => ({ ...f, phone: e.target.value }))} placeholder="+27 82 000 0000" />
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: 4 }}>
             <span style={{ background: "#C9A96E22", color: "#C9A96E", padding: "3px 12px", borderRadius: 20, fontSize: 12, border: "1px solid #C9A96E44", textTransform: "uppercase", letterSpacing: 1 }}>

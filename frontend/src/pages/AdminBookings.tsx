@@ -67,6 +67,8 @@ export default function AdminBookings({ onToast }: { onToast: (m: string, t?: "s
             {b.status === "pending" && (
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap", paddingTop: 12, borderTop: "1px solid #2A2118" }}>
                 <input
+                  name={`staff_notes_${b.id}`}
+                  id={`staff_notes_${b.id}`}
                   placeholder="Staff notes…"
                   value={notes[b.id] || ""}
                   onChange={e => setNotes(n => ({ ...n, [b.id]: e.target.value }))}
