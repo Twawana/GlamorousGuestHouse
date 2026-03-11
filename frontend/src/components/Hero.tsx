@@ -41,29 +41,6 @@ export default function LandingPage({ onBrowse, onAuth, user }: {
   }, []);
 
 
-  const testimonials = [
-    {
-      name: "Sarah Johnson",
-      location: "Cape Town",
-      text: "An unforgettable experience. The attention to detail and service was impeccable. Every moment felt curated just for us.",
-      rating: 5,
-      date: "March 2026"
-    },
-    {
-      name: "Michael Chen",
-      location: "Singapore",
-      text: "The most luxurious stay in Western Cape. The suites are absolutely stunning, and the staff anticipated our every need.",
-      rating: 5,
-      date: "February 2026"
-    },
-    {
-      name: "Emma Watson",
-      location: "London",
-      text: "Perfect romantic getaway. Woke up to the most breathtaking mountain views. We'll definitely be back.",
-      rating: 5,
-      date: "January 2026"
-    }
-  ];
 
   return (
     <div className="landing-page">

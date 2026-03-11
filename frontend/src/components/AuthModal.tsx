@@ -2,18 +2,6 @@ import { useState } from "react";
 import { apiFetch } from "../utils";
 import type { CE } from "../types";
 
-const getErrorMessage = (status: number, mode: string, serverMsg?: string): string => {
-  if (serverMsg) return serverMsg;
-  switch (status) {
-    case 409: return "An account with this email already exists. Try signing in instead.";
-    case 401: return mode === "login" ? "Incorrect email or password. Please try again." : "Unauthorized.";
-    case 400: return "Please fill in all required fields correctly.";
-    case 404: return "No account found with that email. Try registering instead.";
-    case 429: return "Too many attempts. Please wait a moment and try again.";
-    case 500: return "Server error. Please try again shortly.";
-    default:  return "Something went wrong. Please try again.";
-  }
-};
 
 export default function AuthModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (user: any) => void }) {
   const [mode, setMode] = useState<string>("login");

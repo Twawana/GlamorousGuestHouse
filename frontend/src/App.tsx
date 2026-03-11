@@ -12,6 +12,7 @@ import ManageStaff from "./pages/ManageStaff";
 import type { ToastType } from "./types";
 import { apiFetch } from "./utils";
 import { FaFacebookF, FaInstagram, FaWhatsapp } from "react-icons/fa";
+import logo from "./images/Logo.jpeg";
 
 // Authentication and Staff Management App
 
@@ -94,19 +95,32 @@ export default function App() {
         borderBottom: "1px solid #2A2118",
       }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(16px,4vw,48px)", display: "flex", alignItems: "center", height: 66 }}>
-          <button onClick={() => goTo("home")} style={{ background: "none", border: "none", flex: 1, textAlign: "left" }}>
-            <span className="serif gold" style={{ fontSize: 20, letterSpacing: 1 }}>Glamorous GuestHouse</span>
-          </button>
+  <button onClick={() => goTo("home")} style={{ background: "none", border: "none", flex: 1, textAlign: "left", display: "flex", alignItems: "center", gap: 12 }}>
+    {/* Logo space — replace with <img src="..." /> when ready */}
+    <div style={{
+      width: 38,
+      height: 38,
+      borderRadius: "50%",
+      border: "1.5px solid #c9a84c",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      flexShrink: 0,
+      overflow: "hidden"
+    }}>
+      <img src={logo} alt="Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+    </div>
+    <span className="serif gold" style={{ fontSize: 20, letterSpacing: 1 }}>Glamorous GuestHouse</span>
+  </button>
 
-          <div style={{ display: "flex", gap: 4, alignItems: "center" }} className="desktop-nav">
-            {navItems.map(n => (
-              <button key={n.id} className={`nav-link ${page === n.id ? "active" : ""}`} onClick={() => goTo(n.id)}
-                style={{ padding: "6px 14px" }}>
-                {n.label}
-              </button>
-            ))}
-          </div>
-
+  <div style={{ display: "flex", gap: 4, alignItems: "center" }} className="desktop-nav">
+    {navItems.map(n => (
+      <button key={n.id} className={`nav-link ${page === n.id ? "active" : ""}`} onClick={() => goTo(n.id)}
+        style={{ padding: "6px 14px" }}>
+        {n.label}
+      </button>
+    ))}
+  </div>
           <div style={{ display: "flex", gap: 10, marginLeft: 20, alignItems: "center" }} className="desktop-nav">
             {user ? (
               <>
@@ -206,7 +220,7 @@ export default function App() {
   style={{
     borderTop: "1px solid #2A2118",
     padding: "48px clamp(16px,4vw,48px)",
-    background: "#0B0806",
+    background: "#060b06",
     marginTop: 60,
   }}
 >

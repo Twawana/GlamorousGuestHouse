@@ -52,7 +52,7 @@ export default function MyBookingsPage({ onToast }: { onToast: (m: string, t?: "
                 </div>
                 <div style={{ textAlign: "right" }}>
                   <p className="serif gold" style={{ fontSize: 22 }}>{formatPrice(b.total_price)}</p>
-                  <p style={{ color: "#5a4f42", fontSize: 12 }}>{b.nights} Per Night{b.nights !== 1 ? "s" : ""}</p>
+                  <p style={{ color: "#5a4f42", fontSize: 12 }}>{b.nights} night{b.nights !== 1 ? "s" : ""}</p>
                 </div>
               </div>
               <hr className="divider" style={{ margin: "14px 0" }} />
